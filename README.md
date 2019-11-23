@@ -1,4 +1,4 @@
-# Rusty Clock
+# Rusty TimeLogger
 
 * Main goal of this project is to learn rust language. 
 * Secondary goal is to create a cli that allows time logging from the terminal.
@@ -20,3 +20,23 @@ rusty hours today
 rusty hours yesterday
 rusty hours 2019-01-20 2019-02-19
 ```
+
+## Log
+Log command should allow user to add a work entry with minimal typing effort.
+
+Command should be used to log time after the work has been completed so the Begin time will be current time - the time spent on this work log.
+
+### Log params 
+
+| Name       | Required | Default                   | Description                                                       |
+| ---------- | -------- | ------------------------- | ----------------------------------------------------------------- |
+| time-spent | Yes      |                           | Time spent on the task can be provided as 1h or 30m.              |
+| issue      | Yes      |                           | Issue Key or Id of the ticket form the project management system. |
+| comment    | No       | ""                        | Comment should be used to described what has been done.           |
+| start-time | No       | current time - time spent | Defines when work has begun.                                      |
+
+## Show 
+
+
+## Hours
+
