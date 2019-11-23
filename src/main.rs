@@ -13,7 +13,9 @@ struct Log {
 }
 
 #[derive(StructOpt, Debug)]
+#[structopt(about = "Rusty TimeLogger is a cli for the timelogging")]
 enum App {
+    /// Log command allows you to create a work log for a specific issue.
     Log(Log),
 }
 
