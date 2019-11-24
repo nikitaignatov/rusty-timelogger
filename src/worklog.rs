@@ -62,9 +62,9 @@ mod tests {
         }
     }
 
-    #[test_case(vec!["log", "1h",       "a-1"],         3600)]
-    #[test_case(vec!["log", "1h30m",    "a-1"],         5400)]
-    #[test_case(vec!["log", "1m",       "a-1"],         60)]
+    #[test_case(vec!["log", "1h",    "a-1"], 3600)]
+    #[test_case(vec!["log", "1h30m", "a-1"], 5400)]
+    #[test_case(vec!["log", "1m",    "a-1"], 60)]
     fn time_spent(input: Vec<&str>, expeced: u64) {
         match convert(input) {
             Ok((duration, b, c)) => assert_eq!(duration, Duration::from(std::time::Duration::new(expeced, 0))),
@@ -72,9 +72,9 @@ mod tests {
         }
     }
 
-    #[test_case(vec!["log", "1h", "a-1"],       "A",1)]
-    #[test_case(vec!["log", "1h", "a-2"],       "A",2)]
-    #[test_case(vec!["log", "1m", "b-0"],       "B",0)]
+    #[test_case(vec!["log", "1h", "a-1"], "A",1)]
+    #[test_case(vec!["log", "1h", "a-2"], "A",2)]
+    #[test_case(vec!["log", "1m", "b-0"], "B",0)]
     #[test_case(vec!["log", "1m", "proj-1234"], "PROJ",1234)]
     fn issue_key(input: Vec<&str>, project: &str, key: i16) {
         match convert(input) {

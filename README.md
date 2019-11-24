@@ -41,7 +41,7 @@ Below is the usage text for the log command
 Log command allows you to create a work log for a specific issue.
 
 USAGE:
-    timelogger-rust.exe log <time-spent> <issue> [comment]
+    rusty log <time-spent> <issue> [comment]
 
 FLAGS:
     -h, --help       Prints help information

@@ -1,5 +1,5 @@
 [package]
-name = "timelogger-rust"
+name = "rusty"
 version = "0.1.0"
 authors = ["Nikita Ignatov <4703715+nikitaignatov@users.noreply.github.com>"]
 edition = "2018"
