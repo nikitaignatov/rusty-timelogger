@@ -13,11 +13,17 @@ pub struct IssueKey {
 #[derive(StructOpt, PartialEq, Debug)]
 pub struct Log {
     /// How much time was spent on this worklog. Examples: is 1h or 1h30m or 30m
-    time_spent: Duration,
+    pub time_spent: Duration,
     /// Issue Key for this worklog. Examples: PROJ-1234
-    issue: IssueKey,
+    pub issue: IssueKey,
     /// Describe what you have done
-    comment: Option<String>,
+    pub comment: Option<String>,
+}
+
+impl IssueKey {
+    pub fn to_string(self) -> String {
+        format!("{}-{}", self.project, self.key)
+    }
 }
 
 /// Jira IssueKey parses PROJ-1234 into a struct of IssueKey { project: "PROJ", key: 1234 }
@@ -65,6 +71,7 @@ mod tests {
     #[test_case(vec!["log", "1h",    "a-1"], 3600)]
     #[test_case(vec!["log", "1h30m", "a-1"], 5400)]
     #[test_case(vec!["log", "1m",    "a-1"], 60)]
+    //  #[test_case(vec!["log", "m2",    "a-1"], 60)]
     fn time_spent(input: Vec<&str>, expeced: u64) {
         match convert(input) {
             Ok((duration, b, c)) => assert_eq!(

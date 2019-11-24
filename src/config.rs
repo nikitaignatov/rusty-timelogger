@@ -6,13 +6,13 @@ use structopt::StructOpt;
 pub struct RustyConfig {
     /// username for the jira account that will  be used to log time.
     #[structopt(long)]
-    jira_username: String,
+    pub jira_username: String,
     /// api key for the jira account that will  be used to log time.
     #[structopt(long)]
     pub jira_api_key: String,
     /// url to the jira instance
     #[structopt(long)]
-    jira_host: String,
+    pub jira_host: String,
 }
 
 impl ::std::default::Default for RustyConfig {
@@ -26,8 +26,13 @@ impl ::std::default::Default for RustyConfig {
 }
 
 impl RustyConfig {
-    pub fn host(&mut self, input: String) {
+    pub fn host(mut self, input: String) -> RustyConfig {
         self.jira_host = input;
+        self
+    }
+    pub fn api_key(mut self, input: String) -> RustyConfig {
+        self.jira_api_key = input;
+        self
     }
 }
 
