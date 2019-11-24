@@ -35,6 +35,23 @@ Command should be used to log time after the work has been completed so the Begi
 | comment    | No       | Comment should be used to described what has been done.               |
 | start-time | No       | Defines when work has begun. By default `current-time` - `time-spent` |
 
+### Usage
+Below is the usage text for the log command
+``` bash
+Log command allows you to create a work log for a specific issue.
+
+USAGE:
+    timelogger-rust.exe log <time-spent> <issue> [comment]
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+ARGS:
+    <time-spent>    How much time was spent on this worklog. Examples: is 1h or 1h30m or 30m
+    <issue>         Issue Key for this worklog. Examples: PROJ-1234
+    <comment>       Describe what you have done
+```
 ## Show 
 
 
