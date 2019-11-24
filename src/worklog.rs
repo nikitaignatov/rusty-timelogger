@@ -41,7 +41,7 @@ mod tests {
     extern crate test_case_derive;
     use super::*;
     use test_case_derive::test_case;
-    fn convert(input: Vec<&str>) -> Result<(Duration,IssueKey,Option<String>),&str> {
+    fn convert(input: Vec<&str>) -> Result<(Duration, IssueKey, Option<String>), &str> {
         match Log::from_clap(&Log::clap().get_matches_from(input)) {
             Log {
                 comment,
@@ -67,7 +67,10 @@ mod tests {
     #[test_case(vec!["log", "1m",    "a-1"], 60)]
     fn time_spent(input: Vec<&str>, expeced: u64) {
         match convert(input) {
-            Ok((duration, b, c)) => assert_eq!(duration, Duration::from(std::time::Duration::new(expeced, 0))),
+            Ok((duration, b, c)) => assert_eq!(
+                duration,
+                Duration::from(std::time::Duration::new(expeced, 0))
+            ),
             _ => assert!(false, "failed to match the pattern"),
         }
     }
@@ -78,10 +81,13 @@ mod tests {
     #[test_case(vec!["log", "1m", "proj-1234"], "PROJ",1234)]
     fn issue_key(input: Vec<&str>, project: &str, key: i16) {
         match convert(input) {
-            Ok((a, issue, b)) => assert_eq!(issue, IssueKey {
-                project: project.to_string(),
-                key: key
-            }),
+            Ok((a, issue, b)) => assert_eq!(
+                issue,
+                IssueKey {
+                    project: project.to_string(),
+                    key: key
+                }
+            ),
             _ => assert!(false, "failed to match the pattern"),
         }
     }
