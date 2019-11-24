@@ -26,7 +26,7 @@ Log command should allow user to add a work entry with minimal typing effort.
 
 Command should be used to log time after the work has been completed so the Begin time will be current time - the time spent on this work log.
 
-### Log params 
+### Params 
 
 | Name       | Required | Description                                                           |
 | ---------- | -------- | --------------------------------------------------------------------- |
