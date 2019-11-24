@@ -28,12 +28,12 @@ Command should be used to log time after the work has been completed so the Begi
 
 ### Log params 
 
-| Name       | Required | Default                   | Description                                                       |
-| ---------- | -------- | ------------------------- | ----------------------------------------------------------------- |
-| time-spent | Yes      |                           | Time spent on the task can be provided as 1h or 30m.              |
-| issue      | Yes      |                           | Issue Key or Id of the ticket form the project management system. |
-| comment    | No       | ""                        | Comment should be used to described what has been done.           |
-| start-time | No       | current time - time spent | Defines when work has begun.                                      |
+| Name       | Required | Description                                                           |
+| ---------- | -------- | --------------------------------------------------------------------- |
+| time-spent | Yes      | Time spent on the task can be provided as 1h or 30m.                  |
+| issue      | Yes      | Issue Key or Id of the ticket form the project management system.     |
+| comment    | No       | Comment should be used to described what has been done.               |
+| start-time | No       | Defines when work has begun. By default `current-time` - `time-spent` |
 
 ## Show 
 
