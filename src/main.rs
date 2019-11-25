@@ -6,6 +6,8 @@ use worklog::Log;
 use chrono::SecondsFormat::Millis;
 use chrono::Utc;
 use structopt::StructOpt;
+use colored::*;
+
 
 #[macro_use]
 extern crate serde_derive;
@@ -38,6 +40,7 @@ impl worklog::Log {
 }
 
 fn main() -> Result<(), ::std::io::Error> {
+    control::set_virtual_terminal(true); 
     //env_logger::init();
     let args = App::from_args();
     match args {

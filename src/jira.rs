@@ -3,6 +3,7 @@ extern crate base64_lib;
 
 use chrono::SecondsFormat::Millis;
 use chrono::Utc;
+use colored::*;
 use log::Level;
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -58,8 +59,39 @@ pub fn add_worklog(work: WorkLog) {
     // println!("URL: {}", path);
     // println!("JSON: {}", json);
     let res = http.post().headers(headers).body_str(&json).send().unwrap();
-    println!("status code {}", res.status_code());
-
+    match res.status_code() {
+        201 => println!(
+            "{} {}",
+            "SUCCESS".green().bold(),
+            res.status_code().to_string().green()
+        ),
+        400 => {
+            println!("Suggestions from Bitbucket:");
+            println!(
+                "- {} is set to new but {} is not provided or is invalid.",
+                "adjustEstimate".yellow().bold(),
+                "newEstimate".yellow().bold()
+            );
+            println!(
+                "- {} is set to {} but {} is not provided or is invalid.",
+                "adjustEstimate".yellow().bold(),
+                "manual".yellow().bold(),
+                "reduceBy".yellow().bold()
+            );
+            println!("- the user does not have permission to add the worklog.");
+            println!("- the request JSON is malformed.");
+        }
+        404 => println!(
+            "{} {} - Returned if the issue is not found or the user does not have permission to view it.",
+            "ERROR".yellow().bold(),
+            res.status_code().to_string().bold().yellow()
+        ),
+        _ => println!(
+            "{} {} - Check the JSON that has been sent to BitBucket.",
+            "ERROR".yellow().bold(),
+            res.status_code().to_string().yellow()
+        ),
+    }
     ()
 }
 
