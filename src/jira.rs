@@ -66,6 +66,11 @@ pub fn add_worklog(work: WorkLog) {
             res.status_code().to_string().green()
         ),
         400 => {
+            println!(
+                "{} {} ",
+                "ERROR".red().bold(),
+                res.status_code().to_string().bold().red()
+            );
             println!("Suggestions from Bitbucket:");
             println!(
                 "- {} is set to new but {} is not provided or is invalid.",
@@ -82,15 +87,17 @@ pub fn add_worklog(work: WorkLog) {
             println!("- the request JSON is malformed.");
         }
         404 => println!(
-            "{} {} - Returned if the issue is not found or the user does not have permission to view it.",
-            "ERROR".yellow().bold(),
-            res.status_code().to_string().bold().yellow()
+            "{} {}\nSuggestions from Bitbucket:\n- Returned if the issue is not found or the user does not have permission to view it.",
+            "ERROR".red().bold(),
+            res.status_code().to_string().bold().red()
         ),
-        _ => println!(
-            "{} {} - Check the JSON that has been sent to BitBucket.",
+        _ => {println!(
+            "{} {}",
             "ERROR".yellow().bold(),
             res.status_code().to_string().yellow()
-        ),
+        );
+        println!("- Check the JSON that has been sent to BitBucket.");
+    },
     }
     ()
 }
