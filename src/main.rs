@@ -47,7 +47,7 @@ fn main() -> Result<(), ::std::io::Error> {
             println!("Configuration is saved.");
         }
         App::Log(input) => {
-            println!("{:?}", input);
+            // println!("{:?}", input);
             jira::add_worklog(input.to_jira_worklog());
         }
     };

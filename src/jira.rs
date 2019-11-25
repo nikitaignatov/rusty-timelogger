@@ -1,11 +1,14 @@
 use crate::config;
+extern crate base64_lib;
+
 use chrono::SecondsFormat::Millis;
 use chrono::Utc;
 use log::Level;
-use reqwest::header::CONTENT_TYPE;
-use reqwest::*;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::time::Duration;
+
+use minihttp::request::Request;
 
 /// Worklog structure for Jira REST API
 #[derive(Debug, Serialize, Deserialize)]
@@ -35,21 +38,29 @@ fn worklog_path(issueKey: &str, conf: &config::RustyConfig) -> String {
     )
 }
 
+fn auth_header(conf: config::RustyConfig) -> String {
+    let input = format!("{}:{}", conf.jira_username, conf.jira_api_key);
+    let input_vector: Vec<u8> = String::from(input).into_bytes();
+    let result_string: String = base64_lib::encode(&input_vector);
+    format!("Basic {}", result_string)
+}
+
 pub fn add_worklog(work: WorkLog) {
-    let client = reqwest::Client::new();
     let conf = config::load().expect("Configuration is not present.");
     let path = worklog_path(&work.issue_key, &conf);
     let json = serde_json::to_string(&work).expect("Work log could not be serialized.");
-    let res = client
-        .post(&path)
-        .basic_auth(conf.jira_username, Some(conf.jira_api_key))
-        .header(CONTENT_TYPE, "application/json")
-        .body(json)
-        .send();
-    match res {
-        Ok(response) => println!("{:?}", response),
-        Err(e) => println!("{:?}", e),
-    }
+
+    let mut http = Request::new(&path).unwrap();
+    let mut headers = HashMap::new();
+    let result = auth_header(conf);
+    headers.insert("Content-Type", "application/json");
+    headers.insert("Authorization", &result);
+    // println!("URL: {}", path);
+    // println!("JSON: {}", json);
+    let res = http.post().headers(headers).body_str(&json).send().unwrap();
+    println!("status code {}", res.status_code());
+
+    ()
 }
 
 #[test]
