@@ -31,11 +31,11 @@ struct User {
     email_address: Option<String>,
     active: bool,
 }
-fn worklog_path(issueKey: &str, conf: &config::RustyConfig) -> String {
+fn worklog_path(issue_key: &str, conf: &config::RustyConfig) -> String {
     format!(
         "{host}/rest/api/latest/issue/{issueKey}/worklog",
         host = conf.jira_host.trim_matches('/'),
-        issueKey = issueKey
+        issueKey = issue_key
     )
 }
 
@@ -46,59 +46,31 @@ fn auth_header(conf: config::RustyConfig) -> String {
     format!("Basic {}", result_string)
 }
 
+fn error_message(input: usize, url: String, json: String) {
+    let code = input.to_string();
+    match input {
+        201 => println!("{} {}", "SUCCESS".green().bold(), code.green()),
+        _ => {
+            println!("{} {}", "ERROR".yellow().bold(), code.to_string().yellow());
+            println!("Check the JSON that has been sent to BitBucket.");
+            println!("{}  :{}","url".bold(), url);
+            println!("{} :{}","json".bold(), json.green());
+        }
+    }
+}
+
 pub fn add_worklog(work: WorkLog) {
     let conf = config::load().expect("Configuration is not present.");
     let path = worklog_path(&work.issue_key, &conf);
-    let json = serde_json::to_string(&work).expect("Work log could not be serialized.");
+    let json = serde_json::to_string_pretty(&work).expect("Work log could not be serialized.");
 
     let mut http = Request::new(&path).unwrap();
     let mut headers = HashMap::new();
     let result = auth_header(conf);
     headers.insert("Content-Type", "application/json");
     headers.insert("Authorization", &result);
-    // println!("URL: {}", path);
-    // println!("JSON: {}", json);
     let res = http.post().headers(headers).body_str(&json).send().unwrap();
-    match res.status_code() {
-        201 => println!(
-            "{} {}",
-            "SUCCESS".green().bold(),
-            res.status_code().to_string().green()
-        ),
-        400 => {
-            println!(
-                "{} {} ",
-                "ERROR".red().bold(),
-                res.status_code().to_string().bold().red()
-            );
-            println!("Suggestions from Bitbucket:");
-            println!(
-                "- {} is set to new but {} is not provided or is invalid.",
-                "adjustEstimate".yellow().bold(),
-                "newEstimate".yellow().bold()
-            );
-            println!(
-                "- {} is set to {} but {} is not provided or is invalid.",
-                "adjustEstimate".yellow().bold(),
-                "manual".yellow().bold(),
-                "reduceBy".yellow().bold()
-            );
-            println!("- the user does not have permission to add the worklog.");
-            println!("- the request JSON is malformed.");
-        }
-        404 => println!(
-            "{} {}\nSuggestions from Bitbucket:\n- Returned if the issue is not found or the user does not have permission to view it.",
-            "ERROR".red().bold(),
-            res.status_code().to_string().bold().red()
-        ),
-        _ => {println!(
-            "{} {}",
-            "ERROR".yellow().bold(),
-            res.status_code().to_string().yellow()
-        );
-        println!("- Check the JSON that has been sent to BitBucket.");
-    },
-    }
+    error_message(res.status_code(), path, json);
     ()
 }
 
