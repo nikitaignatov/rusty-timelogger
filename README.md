@@ -57,3 +57,22 @@ ARGS:
 
 ## Hours
 
+## Config
+In order to connect to Jira url and api key need to be configured. This version stores credentials on file system in plain text.
+
+### Usage
+``` bash
+Config command allows to change some of the settings
+
+USAGE:
+    rusty.exe config --jira-api-key <jira-api-key> --jira-host <jira-host> --jira-username <jira-username>
+
+FLAGS:
+    -h, --help       Prints help information
+    -V, --version    Prints version information
+
+OPTIONS:
+        --jira-api-key <jira-api-key>      api key for the jira account that will  be used to log time.
+        --jira-host <jira-host>            url to the jira instance
+        --jira-username <jira-username>    username for the jira account that will  be used to log time.
+```
