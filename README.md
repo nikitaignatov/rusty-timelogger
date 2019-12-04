@@ -33,7 +33,7 @@ Command should be used to log time after the work has been completed so the Begi
 | time-spent | Yes      | Time spent on the task can be provided as 1h or 30m.                  |
 | issue      | Yes      | Issue Key or Id of the ticket form the project management system.     |
 | comment    | No       | Comment should be used to described what has been done.               |
-| start-time | No       | Defines when work has begun. By default `current-time` - `time-spent` |
+| when       | No       | Defines when work has begun. By default `current-time` - `time-spent` |
 
 ### Usage
 Below is the usage text for the log command
@@ -41,11 +41,14 @@ Below is the usage text for the log command
 Log command allows you to create a work log for a specific issue.
 
 USAGE:
-    rusty log <time-spent> <issue> [comment]
+    rusty log [OPTIONS] <time-spent> <issue> [comment]
 
 FLAGS:
     -h, --help       Prints help information
     -V, --version    Prints version information
+
+OPTIONS:
+    -w, --when <when>    When did the work started
 
 ARGS:
     <time-spent>    How much time was spent on this worklog. Examples: is 1h or 1h30m or 30m

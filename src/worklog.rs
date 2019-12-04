@@ -16,6 +16,9 @@ pub struct Log {
     pub time_spent: Duration,
     /// Issue Key for this worklog. Examples: PROJ-1234
     pub issue: IssueKey,
+    /// When did the work started
+    #[structopt(short = "w", long = "when")]
+    pub when: Option<chrono::NaiveDateTime>,
     /// Describe what you have done
     pub comment: Option<String>,
 }
@@ -47,14 +50,8 @@ mod tests {
     extern crate test_case_derive;
     use super::*;
     use test_case_derive::test_case;
-    fn convert(input: Vec<&str>) -> Result<(Duration, IssueKey, Option<String>), &str> {
-        match Log::from_clap(&Log::clap().get_matches_from(input)) {
-            Log {
-                comment,
-                issue,
-                time_spent,
-            } => Ok((time_spent, issue, comment)),
-        }
+    fn convert(input: Vec<&str>) -> Result<Log, &str> {
+        Ok(Log::from_clap(&Log::clap().get_matches_from(input)))
     }
 
     #[test_case(vec!["log", "1h", "a-1"],                  None)]
@@ -63,7 +60,7 @@ mod tests {
     #[test_case(vec!["log", "1h", "a-1","some work log"],  Some("some work log".to_string()))]
     fn comment(input: Vec<&str>, expeced: Option<String>) {
         match convert(input) {
-            Ok((a, b, comment)) => assert_eq!(comment, expeced),
+            Ok(log) => assert_eq!(log.comment, expeced),
             _ => assert!(false, "failed to match the pattern"),
         }
     }
@@ -74,8 +71,8 @@ mod tests {
     //  #[test_case(vec!["log", "m2",    "a-1"], 60)]
     fn time_spent(input: Vec<&str>, expeced: u64) {
         match convert(input) {
-            Ok((duration, b, c)) => assert_eq!(
-                duration,
+            Ok(log) => assert_eq!(
+                log.time_spent,
                 Duration::from(std::time::Duration::new(expeced, 0))
             ),
             _ => assert!(false, "failed to match the pattern"),
@@ -88,12 +85,24 @@ mod tests {
     #[test_case(vec!["log", "1m", "proj-1234"], "PROJ",1234)]
     fn issue_key(input: Vec<&str>, project: &str, key: i16) {
         match convert(input) {
-            Ok((a, issue, b)) => assert_eq!(
-                issue,
+            Ok(log) => assert_eq!(
+                log.issue,
                 IssueKey {
                     project: project.to_string(),
                     key: key
                 }
+            ),
+            _ => assert!(false, "failed to match the pattern"),
+        }
+    }
+
+    #[test_case(vec!["log", "1h", "a-1", "-w","2019-12-10T23:20:12"], "2019-12-10T23:20:12")]
+    #[test_case(vec!["log", "1h", "a-1", "-w","2019-11-10T00:00:00"], "2019-11-10T00:00:00")]
+    fn when(input: Vec<&str>, expected: &str) {
+        match convert(input) {
+            Ok(log) => assert_eq!(
+                log.when.unwrap(),
+                chrono::NaiveDateTime::from_str(expected).unwrap()
             ),
             _ => assert!(false, "failed to match the pattern"),
         }
