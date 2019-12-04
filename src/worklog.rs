@@ -23,8 +23,8 @@ pub struct Log {
     pub comment: Option<String>,
 }
 
-impl IssueKey {
-    pub fn to_string(self) -> String {
+impl ToString for IssueKey {
+    fn to_string(&self) -> String {
         format!("{}-{}", self.project, self.key)
     }
 }
