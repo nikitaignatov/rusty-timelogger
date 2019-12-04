@@ -1,5 +1,4 @@
-extern crate confy;
-
+use confy;
 use structopt::StructOpt;
 
 #[derive(StructOpt, PartialEq, Serialize, Deserialize, Debug)]

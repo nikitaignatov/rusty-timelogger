@@ -1,4 +1,4 @@
-extern crate humantime;
+use humantime;
 use humantime::Duration;
 use std::str::FromStr;
 use structopt::StructOpt;

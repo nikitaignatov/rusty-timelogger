@@ -1,6 +1,5 @@
 use crate::config;
-extern crate base64_lib;
-
+use base64_lib;
 use colored::*;
 use minihttp::request::Request;
 use std::collections::HashMap;
