@@ -25,7 +25,7 @@ pub struct Log {
 
 impl ToString for IssueKey {
     fn to_string(&self) -> String {
-        format!("{}-{}", self.project, self.key)
+        format!("{}-{}", self.project.to_uppercase(), self.key)
     }
 }
 
@@ -104,6 +104,23 @@ mod tests {
                 log.when.unwrap(),
                 chrono::NaiveDateTime::from_str(expected).unwrap()
             ),
+            _ => assert!(false, "failed to match the pattern"),
+        }
+    }
+
+    #[test_case(IssueKey{project:"test".into(),key:1337},   "TEST-1337")]
+    #[test_case(IssueKey{project:"JIRA".into(),key:1},      "JIRA-1")]
+    fn issue_key_to_string(input: IssueKey, expected: &str) {
+        assert_eq!(input.to_string(), expected);
+    }
+
+    #[test_case("TEST-1",   IssueKey {project: "TEST".into(), key: 1})]
+    #[test_case("JIRA-1337",IssueKey {project: "JIRA".into(), key: 1337})]
+    fn issue_key_parse(input: &str, expected: IssueKey) {
+        match input.parse::<IssueKey>() {
+            Ok(result) => {
+                assert_eq!(result, expected);
+            }
             _ => assert!(false, "failed to match the pattern"),
         }
     }
