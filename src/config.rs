@@ -25,21 +25,10 @@ impl ::std::default::Default for RustyConfig {
     }
 }
 
-impl RustyConfig {
-    pub fn host(mut self, input: String) -> RustyConfig {
-        self.jira_host = input;
-        self
-    }
-    pub fn api_key(mut self, input: String) -> RustyConfig {
-        self.jira_api_key = input;
-        self
-    }
-}
-
 pub fn load() -> Result<RustyConfig, ::std::io::Error> {
     confy::load("rusty-timelogger")
 }
 
 pub fn store(configuration: RustyConfig) {
-    confy::store("rusty-timelogger", configuration);
+    confy::store("rusty-timelogger", configuration).expect("Did not store the configration");
 }

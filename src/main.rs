@@ -1,7 +1,6 @@
 mod config;
 mod jira;
 mod worklog;
-use worklog::Log;
 
 use chrono::SecondsFormat::Millis;
 use chrono::Utc;
@@ -11,7 +10,6 @@ use colored::*;
 
 #[macro_use]
 extern crate serde_derive;
-#[macro_use]
 extern crate log;
 
 #[derive(StructOpt, PartialEq, Debug)]
@@ -40,8 +38,7 @@ impl worklog::Log {
 }
 
 fn main() -> Result<(), ::std::io::Error> {
-    control::set_virtual_terminal(true); 
-    //env_logger::init();
+    control::set_virtual_terminal(true).expect("Failed to enable virtual terminal"); 
     let args = App::from_args();
     match args {
         App::Config(conf) => {
@@ -50,7 +47,6 @@ fn main() -> Result<(), ::std::io::Error> {
             println!("Configuration is saved.");
         }
         App::Log(input) => {
-            // println!("{:?}", input);
             jira::add_worklog(input.to_jira_worklog());
         }
     };
