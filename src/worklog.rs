@@ -1,6 +1,5 @@
 extern crate humantime;
 use humantime::Duration;
-use std::num::ParseIntError;
 use std::str::FromStr;
 use structopt::StructOpt;
 
@@ -31,17 +30,17 @@ impl ToString for IssueKey {
 
 /// Jira IssueKey parses PROJ-1234 into a struct of IssueKey { project: "PROJ", key: 1234 }
 impl FromStr for IssueKey {
-    type Err = ParseIntError;
+    type Err = String;
     fn from_str(input: &str) -> Result<Self, Self::Err> {
+        let message = "Failed to extract key from the IssueKey. ".to_owned() + input;
         let parts: Vec<&str> = input.split("-").collect();
-        let project = parts[0].to_string().to_uppercase();
-        let key = parts[1]
-            .parse()
-            .expect(&("Failed to extract key from the issue. ".to_owned() + input));
-        Ok(IssueKey {
-            project: project,
-            key: key,
-        })
+        match parts.as_slice() {
+            [project, key] => Ok(IssueKey {
+                project: project.to_string().to_uppercase(),
+                key: key.parse().expect(&message),
+            }),
+            _ => Err(message),
+        }
     }
 }
 
