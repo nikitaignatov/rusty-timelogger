@@ -16,7 +16,9 @@ use commands::*;
 #[structopt(about = "Rusty TimeLogger is a cli for the timelogging")]
 enum App {
     /// Log command allows you to create a work log for a specific issue.
-    Log(worklog::Log),
+    Log(log::Log),
+    ///
+    Hours(hours::Hours),
     /// Config command allows to change some of the settings
     Config(config::RustyConfig),
 }
@@ -32,6 +34,9 @@ fn main() -> Result<(), ::std::io::Error> {
         }
         App::Log(input) => {
             jira::add_worklog(input.into());
+        }
+        App::Hours(input) => {
+            println!("{:?}", input);
         }
     };
     Ok(())
