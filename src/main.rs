@@ -1,8 +1,8 @@
 #![warn(rust_2018_idioms)]
 
+mod commands;
 mod config;
 mod jira;
-mod commands;
 mod mapping;
 
 use colored::*;
@@ -10,6 +10,10 @@ use structopt::StructOpt;
 
 #[macro_use]
 extern crate serde_derive;
+
+#[macro_use]
+extern crate prettytable;
+
 use commands::*;
 
 #[derive(StructOpt, PartialEq, Debug)]

@@ -21,7 +21,7 @@ colored = "1.9"
 
 log = "0.4.8"
 #env_logger = "0.7.1"
-
+prettytable-rs = "^0.8"
 
 [dev-dependencies]
 test-case-derive = "0.2.3"

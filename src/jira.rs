@@ -2,6 +2,8 @@ use crate::config;
 use base64_lib;
 use colored::*;
 use minihttp::request::Request;
+use prettytable::Table;
+use serde_json;
 use std::collections::HashMap;
 
 /// Worklog structure for Jira REST API
@@ -61,7 +63,7 @@ pub fn add_worklog(work: WorkLog) {
     ()
 }
 
-pub fn post(path: String, json: String) {
+pub fn post(path: String, json: String) -> serde_json::Value {
     let conf = config::load().expect("Configuration is not present.");
 
     let mut http = Request::new(&path).unwrap();
@@ -70,8 +72,24 @@ pub fn post(path: String, json: String) {
     headers.insert("Content-Type", "application/json");
     headers.insert("Authorization", &result);
     let res = http.post().headers(headers).body_str(&json).send().unwrap();
+  //  println!("{}", res.text());
+    let v: serde_json::Value = serde_json::from_str(&(res.text())).unwrap();
+    let mut table = Table::new();
+    use prettytable::format;
+    table.set_format(*format::consts::FORMAT_BOX_CHARS);
+    // Add a row per time
+    table.set_titles(row![BDcFw ->"Field",BDcFw-> "Value"]);
+    table.add_row(row!["Result", bFg ->res.status_code()]);
+    table.add_row(row!["Seconds Spent", v["timeSpentSeconds"]]);
+    table.add_row(row!["Started", v["started"]]);
+    table.add_row(row!["Created", v["created"]]);
+    table.add_row(row!["Comment", v["comment"]]);
+
+    // Print the table to stdout
+    table.printstd();
+
     error_message(res.status_code(), path, json);
-    ()
+    (v)
 }
 
 #[test]
