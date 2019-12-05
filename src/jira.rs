@@ -55,7 +55,7 @@ fn error_message(input: usize, url: String, json: String, v: serde_json::Value) 
         }
         _ => {
             table.set_titles(row![bFr ->"ERROR", bFr ->input.to_string() 
-            + " - the JSON that has been sent to BitBucket."]);
+            + " - Check the JSON that has been sent to Jira."]);
             table.add_row(row!["URL", url]);
             table.add_row(row!["JSON", json]);
         }
