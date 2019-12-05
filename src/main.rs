@@ -5,7 +5,6 @@ mod config;
 mod jira;
 mod mapping;
 
-use colored::*;
 use structopt::StructOpt;
 
 #[macro_use]
@@ -28,7 +27,6 @@ enum App {
 }
 
 fn main() -> Result<(), ::std::io::Error> {
-    control::set_virtual_terminal(true).expect("Failed to enable virtual terminal");
     let args = App::from_args();
     match args {
         App::Config(conf) => {

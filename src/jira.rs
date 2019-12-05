@@ -1,6 +1,5 @@
 use crate::config;
 use base64_lib;
-use colored::*;
 use minihttp::request::Request;
 use prettytable::Table;
 use serde_json;
@@ -42,19 +41,19 @@ fn auth_header(conf: config::RustyConfig) -> String {
     format!("Basic {}", result_string)
 }
 
-fn error_message(input: usize, url: String, json: String, v: serde_json::Value) {
+fn error_message(status_code: usize, url: String, json: String, v: serde_json::Value) {
     let mut table = Table::new();
     use prettytable::format;
     table.set_format(*format::consts::FORMAT_BOX_CHARS);
-    match input {
+    match status_code {
         201 => {
-            table.set_titles(row![bFg ->"SUCCESS", bFg ->input]);
+            table.set_titles(row![bFg ->"SUCCESS", bFg ->status_code]);
             table.add_row(row!["Time", v["timeSpent"]]);
             table.add_row(row!["Started", v["started"]]);
             table.add_row(row!["Comment", v["comment"]]);
         }
         _ => {
-            table.set_titles(row![bFr ->"ERROR", bFr ->input.to_string() 
+            table.set_titles(row![bFr ->"ERROR", bFr ->status_code.to_string() 
             + " - Check the JSON that has been sent to Jira."]);
             table.add_row(row!["URL", url]);
             table.add_row(row!["JSON", json]);
@@ -80,9 +79,7 @@ pub fn post(path: String, json: String) {
     headers.insert("Content-Type", "application/json");
     headers.insert("Authorization", &result);
     let res = http.post().headers(headers).body_str(&json).send().unwrap();
-    //  println!("{}", res.text());
     let v: serde_json::Value = serde_json::from_str(&(res.text())).unwrap();
-
     error_message(res.status_code(), path, json, v);
     ()
 }
@@ -97,5 +94,4 @@ fn test_issues() {
             .to_rfc3339_opts(chrono::SecondsFormat::Millis, true)
             .replace("Z", "+0100"), // JIRA API does not support rfc3339 format with : between hours and minus on the timezone
     });
-    //  issues_list();
 }
