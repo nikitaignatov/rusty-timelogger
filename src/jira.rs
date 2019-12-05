@@ -42,17 +42,25 @@ fn auth_header(conf: config::RustyConfig) -> String {
     format!("Basic {}", result_string)
 }
 
-fn error_message(input: usize, url: String, json: String) {
-    let code = input.to_string();
+fn error_message(input: usize, url: String, json: String, v: serde_json::Value) {
+    let mut table = Table::new();
+    use prettytable::format;
+    table.set_format(*format::consts::FORMAT_BOX_CHARS);
     match input {
-        201 => println!("{} {}", "SUCCESS".green().bold(), code.green()),
+        201 => {
+            table.set_titles(row![bFg ->"SUCCESS", bFg ->input]);
+            table.add_row(row!["Time", v["timeSpent"]]);
+            table.add_row(row!["Started", v["started"]]);
+            table.add_row(row!["Comment", v["comment"]]);
+        }
         _ => {
-            println!("{} {}", "ERROR".yellow().bold(), code.to_string().yellow());
-            println!("Check the JSON that has been sent to BitBucket.");
-            println!("{}  :{}", "url".bold(), url);
-            println!("{} :{}", "json".bold(), json.green());
+            table.set_titles(row![bFr ->"ERROR", bFr ->input.to_string() 
+            + " - the JSON that has been sent to BitBucket."]);
+            table.add_row(row!["URL", url]);
+            table.add_row(row!["JSON", json]);
         }
     }
+    table.printstd();
 }
 
 pub fn add_worklog(work: WorkLog) {
@@ -63,7 +71,7 @@ pub fn add_worklog(work: WorkLog) {
     ()
 }
 
-pub fn post(path: String, json: String) -> serde_json::Value {
+pub fn post(path: String, json: String) {
     let conf = config::load().expect("Configuration is not present.");
 
     let mut http = Request::new(&path).unwrap();
@@ -72,24 +80,11 @@ pub fn post(path: String, json: String) -> serde_json::Value {
     headers.insert("Content-Type", "application/json");
     headers.insert("Authorization", &result);
     let res = http.post().headers(headers).body_str(&json).send().unwrap();
-  //  println!("{}", res.text());
+    //  println!("{}", res.text());
     let v: serde_json::Value = serde_json::from_str(&(res.text())).unwrap();
-    let mut table = Table::new();
-    use prettytable::format;
-    table.set_format(*format::consts::FORMAT_BOX_CHARS);
-    // Add a row per time
-    table.set_titles(row![BDcFw ->"Field",BDcFw-> "Value"]);
-    table.add_row(row!["Result", bFg ->res.status_code()]);
-    table.add_row(row!["Seconds Spent", v["timeSpentSeconds"]]);
-    table.add_row(row!["Started", v["started"]]);
-    table.add_row(row!["Created", v["created"]]);
-    table.add_row(row!["Comment", v["comment"]]);
 
-    // Print the table to stdout
-    table.printstd();
-
-    error_message(res.status_code(), path, json);
-    (v)
+    error_message(res.status_code(), path, json, v);
+    ()
 }
 
 #[test]
