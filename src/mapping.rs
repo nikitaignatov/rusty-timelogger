@@ -1,10 +1,10 @@
 use crate::jira;
-use crate::worklog;
+use crate::log;
 use chrono::SecondsFormat::Millis;
 use chrono::Utc;
 
-impl From<worklog::Log> for jira::WorkLog {
-    fn from(input: worklog::Log) -> jira::WorkLog {
+impl From<log::Log> for jira::WorkLog {
+    fn from(input: log::Log) -> jira::WorkLog {
         let duration: std::time::Duration = input.time_spent.into();
         let seconds = duration.as_secs();
         let start_time = match input.when {

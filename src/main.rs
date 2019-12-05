@@ -2,7 +2,7 @@
 
 mod config;
 mod jira;
-mod worklog;
+mod commands;
 mod mapping;
 
 use colored::*;
@@ -10,7 +10,7 @@ use structopt::StructOpt;
 
 #[macro_use]
 extern crate serde_derive;
-
+use commands::*;
 
 #[derive(StructOpt, PartialEq, Debug)]
 #[structopt(about = "Rusty TimeLogger is a cli for the timelogging")]

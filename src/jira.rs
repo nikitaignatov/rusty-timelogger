@@ -24,6 +24,7 @@ struct User {
     email_address: Option<String>,
     active: bool,
 }
+
 fn worklog_path(issue_key: &str, conf: &config::RustyConfig) -> String {
     format!(
         "{host}/rest/api/latest/issue/{issueKey}/worklog",

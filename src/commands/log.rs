@@ -46,7 +46,7 @@ impl FromStr for IssueKey {
 
 #[cfg(test)]
 mod tests {
-    extern crate test_case_derive;
+    use test_case_derive;
     use super::*;
     use test_case_derive::test_case;
     fn convert(input: Vec<&str>) -> Result<Log, &str> {
