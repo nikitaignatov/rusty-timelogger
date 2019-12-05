@@ -79,3 +79,10 @@ OPTIONS:
         --jira-host <jira-host>            url to the jira instance
         --jira-username <jira-username>    username for the jira account that will  be used to log time.
 ```
+
+
+## References
+- [rust learning](https://github.com/ctjhoa/rust-learning)
+- [Awesome Rust Talks & Articles](https://github.com/nikitaignatov/awesome-rust-talks)
+- [Rust comparison with C# - Nicholas Blumhardt](https://nblumhardt.com/2016/03/exploring-rust/)
+- [Pipe results like Elixir or F#?](https://users.rust-lang.org/t/pipe-results-like-elixir/11175/19)
